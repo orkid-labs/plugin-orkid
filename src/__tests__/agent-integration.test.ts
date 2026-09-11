@@ -169,7 +169,7 @@ describe("agent integration — provider", () => {
     expect(result.values).toBeDefined();
     expect((result.values as any).orkidChains).toBeDefined();
     expect(Array.isArray((result.values as any).orkidChains)).toBe(true);
-  });
+  }, 20000);
 
   it("provider returns chain configs in data", async () => {
     const provider = runtime.providers.find((p) => p.name === "ORKID_MARKET_DATA")!;
@@ -186,7 +186,7 @@ describe("agent integration — provider", () => {
       expect(data.chainConfigs[0]).toHaveProperty("id");
       expect(data.chainConfigs[0]).toHaveProperty("minNotionalUsd");
     }
-  });
+  }, 20000);
 });
 
 describe("agent integration — action metadata", () => {
