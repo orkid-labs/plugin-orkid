@@ -1,7 +1,7 @@
 {
   "name": "@orkid-labs/plugin-orkid",
   "description": "Orkid gasless swap engine integration — quote, execute, dry-run, confirm, and track swaps via @orkid-labs/sdk",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.js",
@@ -93,10 +93,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jjcav84/plugin-orkid.git"
+    "url": "git+https://github.com/orkid-labs/plugin-orkid.git"
   },
   "bugs": {
-    "url": "https://github.com/jjcav84/plugin-orkid/issues"
+    "url": "https://github.com/orkid-labs/plugin-orkid/issues"
   },
   "npmPackage": "@orkid-labs/plugin-orkid"
 }
