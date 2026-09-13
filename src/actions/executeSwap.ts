@@ -135,7 +135,7 @@ export const executeSwapAction: Action = {
         const text = [
           `Execution requires a signed Permit2 permit and signature.`,
           `The permit must be generated and signed by the user's wallet.`,
-          `Use the Orkid SDK's OrkidViemPermitSigner or OrkidEthersPermitSigner to sign.`,
+          `Use OrkidViemPermitSigner (@orkid-labs/sdk/viem) or OrkidEthersPermitSigner (@orkid-labs/sdk/ethers) to sign.`,
         ].join("\n");
         if (callback) await callback({ text, actions: ["ORKID_EXECUTE_SWAP"] });
         return { success: false, text, data: { suppressPlannerReply: true }, userFacingText: text, verifiedUserFacing: true };
