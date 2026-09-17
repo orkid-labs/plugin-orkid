@@ -1,18 +1,23 @@
-# @elizaos/plugin-orkid
+# @orkid-labs/plugin-orkid
 
 ElizaOS plugin for the [Orkid](https://orkidlabs.com) gasless swap engine. Quote, execute, dry-run, confirm, and track swaps on Base, Ethereum, Arbitrum, and Polygon via `@orkid-labs/sdk`.
 
 ## Installation
 
 ```bash
-elizaos plugins add @elizaos/plugin-orkid
+bun add @orkid-labs/plugin-orkid
+# or: npm install @orkid-labs/plugin-orkid
 ```
 
-Or with bun:
+Then register the plugin in your agent's character file:
 
-```bash
-bun add @elizaos/plugin-orkid
+```json
+{
+  "plugins": ["@orkid-labs/plugin-orkid"]
+}
 ```
+
+Once the plugin is listed in the ElizaOS registry, `elizaos plugins add @orkid-labs/plugin-orkid` works as well.
 
 ## Configuration
 
