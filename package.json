@@ -1,7 +1,7 @@
 {
   "name": "@orkid-labs/plugin-orkid",
   "description": "Orkid gasless swap engine integration — quote, execute, dry-run, confirm, and track swaps via @orkid-labs/sdk",
-  "version": "2.0.5",
+  "version": "2.0.6",
   "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.js",
@@ -77,7 +77,7 @@
     "pluginParameters": {
       "ORKID_API_KEY": {
         "type": "string",
-        "description": "Orkid API key (40-char hex). Required for partner volume tracking and rebates."
+        "description": "Orkid API key (40-char hex). Required for partner volume tracking and rebates. Provisioned by Orkid — contact api@orkidlabs.com."
       },
       "ORKID_API_URL": {
         "type": "string",

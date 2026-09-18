@@ -25,9 +25,15 @@ Add the following environment variables to your `.env`:
 
 | Variable | Required | Description |
 |----------|----------|-------------|
-| `ORKID_API_KEY` | Yes | 40-character hex Orkid API key. Required for partner volume tracking and rebates. |
+| `ORKID_API_KEY` | Yes | 40-character hex Orkid API key. Required for partner volume tracking and rebates. See [Getting an API key](#getting-an-api-key). |
 | `ORKID_API_URL` | No | Orkid API base URL. Default: `https://orkidlabs.xyz`. Use `sandbox` for sandbox mode (quotes only, no execution). |
 | `ORKID_USER_ADDRESS` | No | Default user wallet address for swaps. |
+
+## Getting an API key
+
+API keys are provisioned by Orkid — they are not self-serve. Contact `api@orkidlabs.com` or schedule a call at https://orkidlabs.xyz/contact and we will create your partner account with the appropriate tier, rate limit, and rebate terms. Sandbox keys are separate from production keys — ask for one if you want quote-only testing.
+
+Anonymous calls (no key) may be rate-limited or blocked by anti-scraping.
 
 ## Actions
 
@@ -103,6 +109,13 @@ Live execution requires a signed Permit2 permit. Use the Orkid SDK's signing hel
 - `OrkidEthersPermitSigner` — for ethers.js wallets
 
 The permit must be signed by the user's wallet and passed to the `ORKID_EXECUTE_SWAP` action via the `options` parameter.
+
+## Contact
+
+For an API key, sandbox access, higher rate limits, or custom fee arrangements:
+
+- Email: `api@orkidlabs.com`
+- Schedule: https://orkidlabs.xyz/contact
 
 ## License
 
