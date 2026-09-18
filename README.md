@@ -31,7 +31,15 @@ Add the following environment variables to your `.env`:
 
 ## Getting an API key
 
-API keys are provisioned by Orkid — they are not self-serve. Contact `api@orkidlabs.com` or schedule a call at https://orkidlabs.xyz/contact and we will create your partner account with the appropriate tier, rate limit, and rebate terms. Sandbox keys are separate from production keys — ask for one if you want quote-only testing.
+Get an instant free key at https://orkidlabs.xyz/partner — or programmatically:
+
+```bash
+curl -X POST https://orkidlabs.xyz/api/v1/signup \
+  -H 'Content-Type: application/json' \
+  -d '{"email": "you@company.com", "project": "your-agent"}'
+```
+
+The plaintext key is shown once — store it immediately. Volume rebates accrue on rolling 30-day windows from activation. For higher tiers, rate limits, sandbox keys, or custom terms, contact `api@orkidlabs.com` or https://orkidlabs.xyz/contact.
 
 Anonymous calls (no key) may be rate-limited or blocked by anti-scraping.
 
@@ -112,7 +120,9 @@ The permit must be signed by the user's wallet and passed to the `ORKID_EXECUTE_
 
 ## Contact
 
-For an API key, sandbox access, higher rate limits, or custom fee arrangements:
+Instant free key: https://orkidlabs.xyz/partner (or `POST /api/v1/signup`).
+
+For sandbox access, higher rate limits, or custom fee arrangements:
 
 - Email: `api@orkidlabs.com`
 - Schedule: https://orkidlabs.xyz/contact
