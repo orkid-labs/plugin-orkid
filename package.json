@@ -1,7 +1,7 @@
 {
   "name": "@orkid-labs/plugin-orkid",
   "description": "Orkid gasless swap engine integration — quote, execute, dry-run, confirm, and track swaps via @orkid-labs/sdk",
-  "version": "2.0.6",
+  "version": "2.1.0",
   "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.js",
@@ -40,7 +40,7 @@
   ],
   "dependencies": {
     "@elizaos/core": "2.0.3-beta.7",
-    "@orkid-labs/sdk": "^0.2.0",
+    "@orkid-labs/sdk": "^0.3.0",
     "zod": "^4.4.3"
   },
   "devDependencies": {

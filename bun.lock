@@ -6,7 +6,7 @@
       "name": "@orkid-labs/plugin-orkid",
       "dependencies": {
         "@elizaos/core": "2.0.3-beta.7",
-        "@orkid-labs/sdk": "^0.2.0",
+        "@orkid-labs/sdk": "^0.3.0",
         "zod": "^4.4.3",
       },
       "devDependencies": {
@@ -80,7 +80,7 @@
 
     "@opentelemetry/api": ["@opentelemetry/api@1.9.1", "", {}, "sha512-gLyJlPHPZYdAk1JENA9LeHejZe1Ti77/pTeFm/nMXmQH/HFZlcS/O2XJB+L8fkbrNSqhdtlvjBVjxwUYanNH5Q=="],
 
-    "@orkid-labs/sdk": ["@orkid-labs/sdk@0.2.0", "", { "peerDependencies": { "ethers": "^6.0.0", "viem": "^2.0.0" }, "optionalPeers": ["ethers", "viem"], "bin": { "orkid": "dist/cli.js" } }, "sha512-W/qZlFqNYaNySvE3Y/RE8WpRFSyDiHE9FuUsUDdXMR6tz+DjrJESQ88qWixG3RFz0favbqG3H2BtwAnpeaHsZA=="],
+    "@orkid-labs/sdk": ["@orkid-labs/sdk@0.3.1", "", { "peerDependencies": { "ethers": "^6.0.0", "viem": "^2.0.0" }, "optionalPeers": ["ethers", "viem"], "bin": { "orkid": "dist/cli.js" } }, "sha512-GxnpDKur9uQLGho576uA51x/tfGtVOFy+0YpWa9cXHYN8ygeU1lz5MNENJBEp7BtNoYncl5i46p8/gcsGV1tgA=="],
 
     "@oxc-project/types": ["@oxc-project/types@0.149.0", "", {}, "sha512-Efcc+iF0j3Bf67YjEqIqWXbX5XddXoK/Mw4K1/JuXwRCZ8N16VR7iT23nlCc9XrveFVh/E5Rqs2StT0V8v9LdA=="],
 

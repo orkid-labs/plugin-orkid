@@ -41,8 +41,8 @@ describe("plugin-orkid structure", () => {
     expect(orkidPlugin.name).toBe("plugin-orkid");
   });
 
-  it("should have 6 actions", () => {
-    expect(orkidPlugin.actions).toHaveLength(6);
+  it("should have 8 actions", () => {
+    expect(orkidPlugin.actions).toHaveLength(8);
   });
 
   it("should have 1 provider", () => {
@@ -103,7 +103,7 @@ describe("OrkidService", () => {
   });
 });
 
-describe("action validation — all 6 actions", () => {
+describe("action validation — all 8 actions", () => {
   it("getQuote should validate when service exists", async () => {
     const runtime = await createMockRuntime(true);
     const action = orkidPlugin.actions?.find((a) => a.name === "ORKID_GET_QUOTE");

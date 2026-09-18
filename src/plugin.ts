@@ -26,6 +26,8 @@ import { dryRunSwapAction } from "./actions/dryRunSwap";
 import { listTokensAction } from "./actions/listTokens";
 import { getUsageAction } from "./actions/getUsage";
 import { confirmTxAction } from "./actions/confirmTx";
+import { bridgeQuoteAction } from "./actions/bridgeQuote";
+import { bridgeStatusAction } from "./actions/bridgeStatus";
 import { orkidMarketDataProvider } from "./providers/marketData";
 import { OrkidPluginTestSuite } from "./e2e/plugin-orkid.e2e";
 
@@ -88,6 +90,8 @@ export const orkidPlugin: Plugin = {
     listTokensAction,
     getUsageAction,
     confirmTxAction,
+    bridgeQuoteAction,
+    bridgeStatusAction,
   ],
   providers: [orkidMarketDataProvider],
   services: [OrkidService],
