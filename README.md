@@ -48,7 +48,7 @@ Anonymous calls (no key) may be rate-limited or blocked by anti-scraping.
 | Action | Description | Billable? |
 |--------|-------------|-----------|
 | `ORKID_GET_QUOTE` | Get an executable swap quote via `/api/v1/route` | No |
-| `ORKID_EXECUTE_SWAP` | Execute a live gasless swap via `/api/v1/solve`. Requires explicit confirmation and a signed Permit2 permit. | Yes |
+| `ORKID_EXECUTE_SWAP` | Execute a live gasless swap via `/api/v1/solve`. Requires `options.confirmed === true` and a signed Permit2 permit — confirmation is never inferred from message text. | Yes |
 | `ORKID_DRY_RUN_SWAP` | Simulate a swap without executing. Returns calldata and expected output. | No |
 | `ORKID_LIST_TOKENS` | List or search tokens available on a chain. | No |
 | `ORKID_GET_USAGE` | Fetch partner account usage, volume, and rebate status. | No |
@@ -81,10 +81,18 @@ Agent: Quote: 25 USDC → 0.0102 WETH on Aerodrome. Rate: 0.000408 WETH/USDC.
 
 ### Execute a Swap
 
+Execution is gated on two structural checks, never on message text:
+the caller must pass `options.confirmed === true` (set after the user
+confirms a presented quote) **and** a signed Permit2 `permit` +
+`signature` via `@orkid-labs/sdk/viem` or `/ethers`. Words like
+"execute" or "confirmed" in the message do not authorize anything.
+
 ```
-User: execute 25 USDC to WETH on base — confirmed
+Agent: Quote: 25 USDC → 0.0102 WETH on base. Confirm?
+User: yes, execute it
 Agent: Swap executed: 25 USDC → 0.0102 WETH. Tx: 0xabc123...
        This counts as billable volume.
+       (invoked ORKID_EXECUTE_SWAP with options { confirmed: true, permit, signature })
 ```
 
 ### Dry Run

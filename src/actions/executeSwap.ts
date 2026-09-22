@@ -4,8 +4,12 @@
  * This is a LIVE EXECUTION action — it submits a real transaction and
  * counts as billable volume for rebate calculations.
  *
- * Requires explicit confirmation from the user. The agent must present
- * a quote first and ask for confirmation before calling this action.
+ * Two gates, both structural (never inferred from message text):
+ *   1. `options.confirmed === true` — set by the caller after the user
+ *      has confirmed a specific quote.
+ *   2. `options.permit` + `options.signature` — a signed Permit2 permit.
+ * Free-text confirmation words are intentionally NOT honored: trigger
+ * words and hedges in user messages are not confirmation.
  */
 
 import type {
@@ -46,12 +50,10 @@ function parseExecuteOptions(text: string): ExecuteOptions {
   const toMatch = text.match(/(?:to|buy|get|receive)\s+(\S+)/i);
   const amountMatch = text.match(/(?:amount|amt|for)\s+([\d.]+)/i);
   const chainMatch = text.match(/(?:on|chain)\s+(\S+)/i);
-  const confirmMatch = /\b(confirm|execute|yes|proceed|go ahead)\b/i.test(text);
   if (fromMatch) opts.from = fromMatch[1];
   if (toMatch) opts.to = toMatch[1];
   if (amountMatch) opts.amount = amountMatch[1];
   if (chainMatch) opts.chain = chainMatch[1].toLowerCase();
-  opts.confirmed = confirmMatch;
   return opts;
 }
 
@@ -65,7 +67,7 @@ export const executeSwapAction: Action = {
     "LIVE_SWAP",
   ],
   description:
-    "Execute a live gasless swap through Orkid. Requires explicit user confirmation and a signed Permit2 permit. This is a billable execution.",
+    "Execute a live gasless swap through Orkid. Requires options.confirmed === true (set after the user confirms a quote) plus a signed Permit2 permit and signature. This is a billable execution.",
 
   validate: async (
     runtime: IAgentRuntime,
@@ -98,7 +100,8 @@ export const executeSwapAction: Action = {
       const chain = (opts.chain || parsed.chain || "base").toLowerCase();
       const userRaw = opts.user || runtime.getSetting("ORKID_USER_ADDRESS");
       const user = userRaw ? String(userRaw) : "";
-      const confirmed = opts.confirmed ?? parsed.confirmed ?? false;
+      // Structured confirmation only — free text is never a confirm signal.
+      const confirmed = opts.confirmed === true;
 
       if (!from || !to || !amount) {
         const text =
@@ -124,8 +127,8 @@ export const executeSwapAction: Action = {
         const text = [
           `I will NOT execute this swap without explicit confirmation.`,
           ``,
-          `To proceed, get a quote first (ORKID_GET_QUOTE), then confirm:`,
-          `"execute ${amount} ${from} to ${to} on ${chain} — confirmed"`,
+          `To proceed, get a quote first (ORKID_GET_QUOTE), present it to the`,
+          `user, then re-invoke this action with options { confirmed: true }.`,
         ].join("\n");
         if (callback) await callback({ text, actions: ["ORKID_EXECUTE_SWAP"] });
         return { success: false, text, data: { suppressPlannerReply: true }, userFacingText: text, verifiedUserFacing: true };
@@ -197,7 +200,7 @@ export const executeSwapAction: Action = {
       {
         name: "{{userName}}",
         content: {
-          text: "execute 25 USDC to WETH on base — confirmed",
+          text: "yes — execute the quoted swap",
           actions: [],
         },
       },
