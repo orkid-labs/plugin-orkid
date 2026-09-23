@@ -67,7 +67,7 @@ export const executeSwapAction: Action = {
     "LIVE_SWAP",
   ],
   description:
-    "Execute a live gasless swap through Orkid. Requires options.confirmed === true (set after the user confirms a quote) plus a signed Permit2 permit and signature. This is a billable execution.",
+    "Execute a live gasless swap through Orkid. Requires user confirmation — options.confirmed === true (set after the user confirms a quote) plus a signed Permit2 permit and signature. This is a billable execution.",
 
   validate: async (
     runtime: IAgentRuntime,
