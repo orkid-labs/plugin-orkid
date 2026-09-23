@@ -17,7 +17,7 @@ Then register the plugin in your agent's character file:
 }
 ```
 
-Once the plugin is listed in the ElizaOS registry, `elizaos plugins add @orkid-labs/plugin-orkid` works as well.
+Direct npm install is the distribution path — elizaOS retired the community plugin registry (elizaOS/eliza#32219), so plugins are wired via `plugins[]` in your agent character as shown above.
 
 ## Configuration
 
