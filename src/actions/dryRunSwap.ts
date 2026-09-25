@@ -31,7 +31,7 @@ function parseDryRunOptions(text: string): DryRunOptions {
   // Strip leading slash/bang command prefix (e.g. /dryrun, !dryrun)
   const clean = text.replace(/^[\/!][a-zA-Z-]*\s*/, '').trim();
   // Handle '25 USDC to WETH on base' (after command word stripped)
-  const directMatch = clean.match(/^([\d.]+)\s+(\S+)\s+to\s+(\S+)\s+on\s+(\S+?)(?:\s+for\s+(0x[a-fA-F0-9]+))?$/i);
+  const directMatch = clean.match(/(?:^|[^\w.])([\d.]+)\s+(\S+)\s+to\s+(\S+)\s+on\s+([a-z0-9-]+)(?:\s+for\s+(0x[a-fA-F0-9]+))?/i);
   if (directMatch) {
     opts.amount = directMatch[1];
     opts.from = directMatch[2];

@@ -46,6 +46,15 @@ interface ExecuteOptions {
 
 function parseExecuteOptions(text: string): ExecuteOptions {
   const opts: ExecuteOptions = {};
+  const directMatch = text.match(/(?:^|[^\w.])([\d.]+)\s+(\S+)\s+to\s+(\S+)\s+on\s+([a-z0-9-]+)(?:\s+for\s+(0x[a-fA-F0-9]+))?/i);
+  if (directMatch) {
+    opts.amount = directMatch[1];
+    opts.from = directMatch[2];
+    opts.to = directMatch[3];
+    opts.chain = directMatch[4].toLowerCase();
+    if (directMatch[5]) opts.user = directMatch[5];
+    return opts;
+  }
   const fromMatch = text.match(/(?:from|sell|send)\s+(\S+)/i);
   const toMatch = text.match(/(?:to|buy|get|receive)\s+(\S+)/i);
   const amountMatch = text.match(/(?:amount|amt|for)\s+([\d.]+)/i);

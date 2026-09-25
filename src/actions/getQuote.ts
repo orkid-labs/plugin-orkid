@@ -30,7 +30,7 @@ function parseQuoteOptions(text: string): QuoteOptions {
   // Strip leading slash/bang command prefix (e.g. /quote, !quote, /dryrun)
   const clean = text.replace(/^[\/!][a-zA-Z-]*\s*/, '').trim();
   // Handle '25 USDC to WETH on base' (after command word stripped)
-  const directMatch = clean.match(/^([\d.]+)\s+(\S+)\s+to\s+(\S+)\s+on\s+(\S+)/i);
+  const directMatch = clean.match(/(?:^|[^\w.])([\d.]+)\s+(\S+)\s+to\s+(\S+)\s+on\s+(\S+)/i);
   if (directMatch) {
     opts.amount = directMatch[1];
     opts.from = directMatch[2];

@@ -156,6 +156,70 @@ describe("agent integration — handler validation", () => {
     expect(result.success).toBe(false);
     expect(result.text).toContain("transaction hash");
   });
+
+  it("getQuote parses 'quote N FROM to TO on CHAIN' phrasing", async () => {
+    const action = runtime.actions.find((a) => a.name === "ORKID_GET_QUOTE")!;
+    const svc: any = runtime.getService("orkid");
+    const spy = vi
+      .spyOn(svc.getClient(), "getQuote")
+      .mockResolvedValue({
+        ok: true,
+        quote: {
+          amountOut: "0.0102",
+          rate: "2450",
+          protocol: "mock",
+          priceImpactBps: 0.5,
+          volumeUsd: 25,
+        },
+        gaslessEligible: true,
+      } as any);
+    const { callback } = makeCallback();
+
+    const result: any = await action.handler(
+      runtime, makeMessage("quote 25 USDC to WETH on base"), makeState(),
+      {} as any, callback
+    );
+
+    expect(spy).toHaveBeenCalledWith(
+      expect.objectContaining({ from: "USDC", to: "WETH", amount: "25", chain: "base" })
+    );
+    expect(result.success).toBe(true);
+    spy.mockRestore();
+  });
+
+  it("dryRun parses 'dry run N FROM to TO on CHAIN' phrasing", async () => {
+    const action = runtime.actions.find((a) => a.name === "ORKID_DRY_RUN_SWAP")!;
+    const svc: any = runtime.getService("orkid");
+    vi.spyOn(svc.getClient(), "listTokens").mockResolvedValue({
+      tokens: [{ address: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913", symbol: "USDC", decimals: 6 }],
+    } as any);
+    const drySpy = vi
+      .spyOn(svc.getClient(), "dryRun")
+      .mockResolvedValue({ ok: true, quote: {}, transaction: {} } as any);
+    const { callback } = makeCallback();
+
+    await action.handler(
+      runtime, makeMessage("dry run 25 USDC to WETH on base"), makeState(),
+      { user: "0x1234567890abcdef1234567890abcdef12345678" } as any, callback
+    );
+
+    expect(drySpy).toHaveBeenCalled();
+    vi.restoreAllMocks();
+  });
+
+  it("executeSwap parses 'execute N FROM to TO on CHAIN' phrasing", async () => {
+    const action = runtime.actions.find((a) => a.name === "ORKID_EXECUTE_SWAP")!;
+    const { callback } = makeCallback();
+
+    const result: any = await action.handler(
+      runtime, makeMessage("execute 25 USDC to WETH on base"), makeState(),
+      { user: "0x1234567890abcdef1234567890abcdef12345678" } as any, callback
+    );
+
+    // Reaches the confirmation gate — proves params parsed (previously fell through to "I need the token…")
+    expect(result.success).toBe(false);
+    expect(result.text).toContain("NOT execute");
+  });
 });
 
 describe("agent integration — provider", () => {
