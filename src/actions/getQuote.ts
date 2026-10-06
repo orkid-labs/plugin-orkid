@@ -29,13 +29,60 @@ function parseQuoteOptions(text: string): QuoteOptions {
   const opts: QuoteOptions = {};
   // Strip leading slash/bang command prefix (e.g. /quote, !quote, /dryrun)
   const clean = text.replace(/^[\/!][a-zA-Z-]*\s*/, '').trim();
+  // Words that look like the capture group but aren't tokens.
+  const STOP = /^(?:the|a|an|my|your|his|her|our|their|this|that|it|wallet|account|contract|pool|one|usd|dollar|dollars|can|could|would|should|i|you|we|they|many|will)$/i;
+  const chainFrom = () => {
+    const m = clean.match(/(?:on|chain)\s+(\S+)/i);
+    if (m) opts.chain = m[1].toLowerCase();
+  };
+
+  // "price of WETH in USDC" / "worth of WETH" — a price check is a 1-unit quote
+  const priceOf = clean.match(/(?:price|worth|value)\s+of\s+([A-Za-z][\w$.-]*?)(?:\s+in\s+([A-Za-z][\w$.-]*))?(?=\s|$|[?.!,])/i);
+  if (priceOf && !STOP.test(priceOf[1])) {
+    opts.from = priceOf[1];
+    opts.to = (priceOf[2] && !STOP.test(priceOf[2])) ? priceOf[2] : 'USDC';
+    opts.amount = "1";
+    chainFrom();
+    return opts;
+  }
+
+  // "how much WETH can I get for 25 USDC" → to=WETH, from=USDC, amount=25
+  const howMuchFor = clean.match(/how much\s+([A-Za-z][\w$.-]*)[^\d]*?for\s+([\d.]+)\s+([A-Za-z][\w$.-]*)/i);
+  if (howMuchFor && !STOP.test(howMuchFor[1]) && !STOP.test(howMuchFor[3])) {
+    opts.to = howMuchFor[1];
+    opts.amount = howMuchFor[2];
+    opts.from = howMuchFor[3];
+    chainFrom();
+    return opts;
+  }
+
+  // "how much is 1 WETH in USDC" / "1 WETH in USDC" → amount-first, `in` separator
+  const amountIn = clean.match(/(?:^|[^\w.])([\d.]+)\s+([A-Za-z][\w$.-]*)\s+in\s+([A-Za-z][\w$.-]*)/i);
+  if (amountIn && !STOP.test(amountIn[2]) && !STOP.test(amountIn[3])) {
+    opts.amount = amountIn[1];
+    opts.from = amountIn[2];
+    opts.to = amountIn[3];
+    chainFrom();
+    return opts;
+  }
+
+  // "WETH price" → 1 WETH → (default buy token)
+  const barePrice = clean.match(/([A-Za-z][\w$.-]*)\s+price\b/i);
+  if (barePrice && !STOP.test(barePrice[1])) {
+    opts.from = barePrice[1];
+    opts.to = 'USDC';
+    opts.amount = "1";
+    chainFrom();
+    return opts;
+  }
+
   // Handle '25 USDC to WETH on base' (after command word stripped)
-  const directMatch = clean.match(/(?:^|[^\w.])([\d.]+)\s+(\S+)\s+to\s+(\S+)\s+on\s+(\S+)/i);
+  const directMatch = clean.match(/(?:^|[^\w.])([\d.]+)\s+(\S+)\s+to\s+(\S+)(?:\s+on\s+(\S+))?/i);
   if (directMatch) {
     opts.amount = directMatch[1];
     opts.from = directMatch[2];
     opts.to = directMatch[3];
-    opts.chain = directMatch[4].toLowerCase();
+    if (directMatch[4]) opts.chain = directMatch[4].toLowerCase();
     return opts;
   }
   const fromMatch = clean.match(/(?:from|sell|send)\s+(\S+)/i);
@@ -48,6 +95,7 @@ function parseQuoteOptions(text: string): QuoteOptions {
   if (chainMatch) opts.chain = chainMatch[1].toLowerCase();
   return opts;
 }
+
 
 export const getQuoteAction: Action = {
   name: "ORKID_GET_QUOTE",
