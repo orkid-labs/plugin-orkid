@@ -187,6 +187,45 @@ describe("agent integration — handler validation", () => {
     spy.mockRestore();
   });
 
+
+  it.each([
+    ["what's the price of WETH in USDC", { from: "WETH", to: "USDC", amount: "1" }],
+    ["price of WETH", { from: "WETH", to: "USDC", amount: "1" }],
+    ["WETH price", { from: "WETH", to: "USDC", amount: "1" }],
+    ["how much WETH can I get for 25 USDC", { from: "USDC", to: "WETH", amount: "25" }],
+    ["how much is 1 WETH in USDC", { from: "WETH", to: "USDC", amount: "1" }],
+    ["25 USDC in WETH", { from: "USDC", to: "WETH", amount: "25" }],
+    ["25 USDC to WETH", { from: "USDC", to: "WETH", amount: "25" }],
+  ])("getQuote parses '%s'", async (text, expected) => {
+    const action = runtime.actions.find((a) => a.name === "ORKID_GET_QUOTE")!;
+    const svc: any = runtime.getService("orkid");
+    const spy = vi
+      .spyOn(svc.getClient(), "getQuote")
+      .mockResolvedValue({
+        ok: true,
+        quote: {
+          amountOut: "0.0102",
+          rate: "2450",
+          protocol: "mock",
+          priceImpactBps: 0.5,
+          volumeUsd: 25,
+        },
+        gaslessEligible: true,
+      } as any);
+    const { callback } = makeCallback();
+
+    const result: any = await action.handler(
+      runtime, makeMessage(text), makeState(),
+      {} as any, callback
+    );
+
+    expect(spy).toHaveBeenCalledWith(
+      expect.objectContaining({ ...expected, chain: "base" })
+    );
+    expect(result.success).toBe(true);
+    spy.mockRestore();
+  });
+
   it("dryRun parses 'dry run N FROM to TO on CHAIN' phrasing", async () => {
     const action = runtime.actions.find((a) => a.name === "ORKID_DRY_RUN_SWAP")!;
     const svc: any = runtime.getService("orkid");
